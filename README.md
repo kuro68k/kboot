@@ -6,8 +6,7 @@ Licence: GPL 3.0
 This is a collection of USB bootloaders for Atmel XMEGA microcontrollers. None require any special drivers to work.
 
 * xmega_usb_bootloader  
- Bulk endpoint based bootloader for devices with 4k or larger bootloader sections. Uses the Kevin Mehall USB stack with some fixes for XMEGA (https://github.com/kevinmehall/usb,  https://github.com/kuro68k/usb_km_xmega).
-
+ Bulk endpoint based bootloader for devices with 4k or larger bootloader sections. Uses the Kevin Mehall USB stack with some fixes for XMEGA (https://github.com/kevinmehall/usb,  https://github.com/kuro68k/usb_km_xmega).  
  Uses Microsoft's extended descriptor (WCID) to elimate the need for a special driver on Windows 7 and later. Communication via libusb on Windows/Linux and probably Mac too.
 
 * xmega_hid_bootloader  
