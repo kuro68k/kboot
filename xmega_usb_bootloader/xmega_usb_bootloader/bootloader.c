@@ -10,8 +10,6 @@
 #include "bootloader.h"
 #include "protocol.h"
 
-extern void CCPWrite(volatile uint8_t *address, uint8_t value);
-
 
 #define	EP_BULK_IN		0x81
 #define EP_BULK_OUT		0x02
@@ -20,8 +18,15 @@ uint8_t bulk_in[BUFFER_SIZE];
 uint8_t bulk_out[BUFFER_SIZE];
 
 
+// add/remove features to fit to available flash memory
+//#define	ENABLE_CMD_READ_SERIAL
+//#define	ENABLE_CMD_READ_EEPROM_CRC
+
+
 #define BOOTLOADER_VERSION	1
 
+
+extern void CCPWrite(volatile uint8_t *address, uint8_t value);
 typedef void (*AppPtr)(void) __attribute__ ((noreturn));
 
 struct {
@@ -203,7 +208,8 @@ void poll_usb(void)
 						bulk_in[i] = SP_ReadUserSignatureByte(cmd->params.u16[0] + i);
 					usb_ep_start_in(EP_BULK_IN, bulk_in, 6, false);
 					break;
-/*
+
+#ifdef ENABLE_CMD_READ_SERIAL
 				case CMD_READ_SERIAL:
 					{
 						uint8_t	i;
@@ -232,7 +238,8 @@ void poll_usb(void)
 						bulk_in[j] = '\0';
 						break;
 					}
-*/
+#endif
+
 				case CMD_RESET_MCU:
 					CCPWrite((void *)&WDT.CTRL, WDT_PER_128CLK_gc | WDT_WEN_bm | WDT_CEN_bm);	// watchdog will reset us in ~128ms
 					break;
@@ -255,6 +262,7 @@ void poll_usb(void)
 					EEP_AtomicWritePage(cmd->params.u16[0]);
 					break;
 
+#ifdef ENABLE_CMD_READ_EEPROM_CRC
 				case CMD_READ_EEPROM_CRC:
 					CRC.CTRL = CRC_RESET_RESET1_gc;
 					CRC.CTRL = CRC_SOURCE_FLASH_gc | CRC_CRC32_bm;
@@ -270,6 +278,7 @@ void poll_usb(void)
 					bulk_in[2] = CRC.CHECKSUM2;
 					bulk_in[3] = CRC.CHECKSUM3;
 					break;
+#endif
 
 				// unknown command
 				default:
