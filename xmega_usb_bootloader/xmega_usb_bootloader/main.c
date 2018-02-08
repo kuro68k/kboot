@@ -21,10 +21,10 @@ int main(void)
 	__label__ start_bootloader;
 	
 	// entry conditions
-	if ((*(uint32_t *)(0) == 0x4c4f4144) ||				// "LOAD"
-		(*(const __flash uint16_t *)(0) == 0xFFFF))		// reset vector blank
+	if ((*(uint32_t *)(INTERNAL_SRAM_START) == 0x4c4f4144) ||	// "LOAD"
+		(*(const __flash uint16_t *)(0) == 0xFFFF))				// reset vector blank
 	{
-		*(uint32_t *)(0) = 0;							// clear signature
+		*(uint32_t *)(INTERNAL_SRAM_START) = 0;					// clear signature
 		goto start_bootloader;
 	}
 
