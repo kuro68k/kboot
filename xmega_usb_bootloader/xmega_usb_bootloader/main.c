@@ -7,7 +7,7 @@
 #include <avr/interrupt.h>
 #include <avr/pgmspace.h>
 #include <util/delay.h>
-#include "usb_xmega.h"
+#include "usb.h"
 
 typedef void (*AppPtr)(void) __attribute__ ((noreturn));
 
@@ -19,7 +19,7 @@ uint8_t page_buffer[APP_SECTION_PAGE_SIZE];
 int main(void)
 {
 	__label__ start_bootloader;
-	
+goto start_bootloader;
 	// entry conditions
 	if ((*(uint32_t *)(INTERNAL_SRAM_START) == 0x4c4f4144) ||	// "LOAD"
 		(*(const __flash uint16_t *)(0) == 0xFFFF))				// reset vector blank
@@ -48,7 +48,7 @@ int main(void)
 	EIND = 0;				// indirect jumps go to app section
 	RAMPZ = 0;				// LPM uses lower 64k of flash
 	application_vector();
-	
+
 start_bootloader:
 	CCPWrite(&PMIC.CTRL, PMIC_IVSEL_bm);
 	bootloader();

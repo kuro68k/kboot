@@ -6,7 +6,7 @@
 #include <avr/interrupt.h>
 #include "eeprom.h"
 #include "sp_driver.h"
-#include "usb_xmega.h"
+#include "usb.h"
 #include "bootloader.h"
 #include "protocol.h"
 
@@ -72,9 +72,9 @@ uint8_t hex_to_char(uint8_t hex)
 */
 void poll_usb(void)
 {
-	BLCOMMAND_t *cmd = (BLCOMMAND_t *)ep0_buf_out;
-	uint8_t		page_buffer[APP_SECTION_PAGE_SIZE + BUFFER_SIZE];
-
+//	BLCOMMAND_t *cmd = (BLCOMMAND_t *)ep0_buf_out;
+//	uint8_t		page_buffer[APP_SECTION_PAGE_SIZE + BUFFER_SIZE];
+/*
 	for(;;)
 	{
 		// write data to page buffer
@@ -296,6 +296,7 @@ void poll_usb(void)
 
 		} // if (control_out_complete_SIG)
 	} // for(;;)
+	*/
 }
 
 /**************************************************************************************************
@@ -320,23 +321,16 @@ void bootloader(void)
 	//USARTC1.DATA = 'S';
 	//USARTC1.DATA = 'T';
 
-	// Enable USB interrupts
-	USB.INTCTRLA = USB_BUSEVIE_bm | USB_INTLVL_MED_gc;
-	USB.INTCTRLB = USB_TRNIE_bm | USB_SETUPIE_bm;
-
 	usb_init();
-
-	USB.CTRLA |= USB_FIFOEN_bm;
-
 	PMIC.CTRL |= PMIC_LOLVLEN_bm | PMIC_MEDLVLEN_bm | PMIC_HILVLEN_bm;
 	sei();
-
 	usb_attach();
 
-	usb_ep_enable(EP_BULK_IN, USB_EP_TYPE_BULK, BUFFER_SIZE);
-	//usb_ep_start_in(EP_BULK_IN, bulk_in, BUFFER_SIZE, true);
-	usb_ep_enable(EP_BULK_OUT, USB_EP_TYPE_BULK, BUFFER_SIZE);
-	usb_ep_start_out(EP_BULK_OUT, bulk_out, BUFFER_SIZE);
+	//usb_ep_enable(EP_BULK_IN, USB_EP_TYPE_BULK, BUFFER_SIZE);
+	////usb_ep_start_in(EP_BULK_IN, bulk_in, BUFFER_SIZE, true);
+	//usb_ep_enable(EP_BULK_OUT, USB_EP_TYPE_BULK, BUFFER_SIZE);
+	//usb_ep_start_out(EP_BULK_OUT, bulk_out, BUFFER_SIZE);
 
+for(;;);
 	poll_usb();
 }

@@ -23,7 +23,7 @@
 */
 bool lusbExecuteCommand(struct libusb_device_handle *dev, uint8_t command, uint16_t param1, uint16_t param2)
 {
-	int res = libusb_control_transfer(dev, LIBUSB_ENDPOINT_OUT | LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE,
+	int res = libusb_control_transfer(dev, LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE,
 									  command, param1, param2,
 									  NULL, 0, DEFAULT_TIMEOUT_MS);
 	if (res < 0)
